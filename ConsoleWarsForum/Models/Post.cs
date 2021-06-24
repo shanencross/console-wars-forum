@@ -9,7 +9,5 @@ namespace ConsoleWarsForum.Models
     public string Text { get; set; }
     public DateTime DateAndTimeStamp { get; set; }
     public string Username { get; set; }
-
-    public virtual Thread Thread { get; set; }
   }
 }

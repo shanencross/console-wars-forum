@@ -9,12 +9,6 @@ namespace ConsoleWarsForum.Models
     public string Title { get; set; }
     public string Body { get; set; }
     public DateTime DateAndTimeStamp { get; set; }
-    public virtual ICollection<Post> Posts { get; set; }
-
-    public Thread()
-    {
-      this.Posts = new HashSet<Post>();
-    }
   }
 }
 
