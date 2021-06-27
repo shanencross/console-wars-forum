@@ -11,5 +11,3 @@ namespace ConsoleWarsForum.Models
     public DateTime DateAndTimeStamp { get; set; }
   }
 }
-
-
