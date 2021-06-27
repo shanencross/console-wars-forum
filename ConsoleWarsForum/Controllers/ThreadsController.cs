@@ -41,6 +41,14 @@ namespace ConsoleWarsForum.Controllers
             return thread;
         }
 
+        // Get: api/Threads/5/posts
+        [HttpGet("{id}/Posts")]
+        public async Task<ActionResult<IEnumerable<Post>>> GetThreadPosts(int id)
+        {
+            var threadPosts = _context.Posts.Where(post => post.ThreadId == id);
+            return await threadPosts.ToListAsync();
+        }
+
         // PUT: api/Threads/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
@@ -77,6 +85,7 @@ namespace ConsoleWarsForum.Controllers
         [HttpPost]
         public async Task<ActionResult<Thread>> PostThread(Thread thread)
         {
+            thread.DateAndTimeStamp = DateTime.Now;
             _context.Threads.Add(thread);
             await _context.SaveChangesAsync();
 
@@ -99,9 +108,20 @@ namespace ConsoleWarsForum.Controllers
             return NoContent();
         }
 
+        // Post: api/Threads/5/Postst
+        [HttpPost("{id}/Posts")] 
+        public async Task<IActionResult> AddPostToThread(int id, Post post)
+        {
+            post.DateAndTimeStamp = DateTime.Now;
+            post.ThreadId = id;
+            _context.Posts.Add(post);
+            await _context.SaveChangesAsync();
+            return CreatedAtAction("AddPostToThread", new { id = post.PostId }, post);
+        }
+
         private bool ThreadExists(int id)
         {
-            return _context.Threads.Any(e => e.ThreadId == id);
+            return _context.Threads.Any(thread => thread.ThreadId == id);
         }
     }
 }
