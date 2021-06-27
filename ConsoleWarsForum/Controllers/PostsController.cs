@@ -22,9 +22,28 @@ namespace ConsoleWarsForum.Controllers
 
         // GET: api/Posts
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Post>>> GetPosts()
+        public async Task<ActionResult<IEnumerable<Post>>> GetPosts(DateTime? startDateAndTime, DateTime? endDateAndTime)
         {
-            return await _context.Posts.ToListAsync();
+            var query = _context.Posts.AsQueryable();
+
+            if (startDateAndTime == null && endDateAndTime != null)
+            {
+              startDateAndTime = DateTime.MinValue;
+            }
+
+            if (startDateAndTime != null && endDateAndTime == null)
+            {
+              endDateAndTime = DateTime.MaxValue;
+            }
+
+            Console.WriteLine(startDateAndTime);
+            
+            if (startDateAndTime != null && endDateAndTime != null)
+            {
+              query = _context.Posts.Where(post => post.DateAndTimeStamp >= startDateAndTime && post.DateAndTimeStamp <= endDateAndTime);
+            }
+            
+            return await query.ToListAsync();
         }
 
         // GET: api/Posts/5
@@ -84,18 +103,23 @@ namespace ConsoleWarsForum.Controllers
             return CreatedAtAction("GetPost", new { id = post.PostId }, post);
         }
 
-        // DELETE: api/Posts/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePost(int id)
+        [HttpDelete("{id}/{username}")]
+        public async Task<IActionResult> DeletePost(int id, string username)
         {
             var post = await _context.Posts.FindAsync(id);
             if (post == null)
             {
                 return NotFound();
             }
-
-            _context.Posts.Remove(post);
-            await _context.SaveChangesAsync();
+            if (post.Username == username)
+            { 
+                _context.Posts.Remove(post);
+                await _context.SaveChangesAsync();
+            }
+            else 
+            {
+                return Unauthorized();
+            }
 
             return NoContent();
         }
