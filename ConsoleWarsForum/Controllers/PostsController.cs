@@ -77,6 +77,7 @@ namespace ConsoleWarsForum.Controllers
         [HttpPost]
         public async Task<ActionResult<Post>> PostPost(Post post)
         {
+            post.DateAndTimeStamp = DateTime.Now;
             _context.Posts.Add(post);
             await _context.SaveChangesAsync();
 
