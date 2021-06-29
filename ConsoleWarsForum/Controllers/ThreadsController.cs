@@ -108,7 +108,7 @@ namespace ConsoleWarsForum.Controllers
             return NoContent();
         }
 
-        // Post: api/Threads/5/Postst
+        // Post: api/Threads/5/Posts
         [HttpPost("{id}/Posts")] 
         public async Task<IActionResult> AddPostToThread(int id, Post post)
         {
