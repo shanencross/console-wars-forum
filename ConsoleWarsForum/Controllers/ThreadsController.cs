@@ -22,9 +22,15 @@ namespace ConsoleWarsForum.Controllers
 
         // GET: api/Threads
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Thread>>> GetThreads()
+        public async Task<ActionResult<IEnumerable<Thread>>> GetThreads(int? page)
         {
-            return await _context.Threads.ToListAsync();
+            int pageSize = 3;
+            var threads = _context.Threads.AsQueryable();
+            if (page != null)
+            {
+              threads = threads.Skip(pageSize * (page.Value - 1)).Take(pageSize);
+            }
+            return await threads.ToListAsync();
         }
 
         // GET: api/Threads/5
